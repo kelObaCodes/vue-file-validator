@@ -29,20 +29,19 @@ export default {
     validateFile(event) {
       const options = {
         showAlert: true, // We'll handle errors in our component
-        sizeInKbAllowed: 1020, // 10 MB
+        sizeInKbAllowed: 1000, // 10 MB
         allowedTypes: ['image/jpeg', 'image/png', 'application/pdf'],
         heightOfImage: 2000,
-        widthOfImage: 2000,
-        // pdfPageMinCount: 3,
+        widthOfImage: 2000  ,
+        pdfPageMinCount: 3,
         // pdfPageMaxCount: 1,
-          requireImages: true, 
         messages: {
-          noFile: "No file selected.",
+          noFile: "3",
           fileSize: "File size exceeds the allowed limit.",
           fileType: "Invalid file type.",
           dimensions: "Invalid image dimensions.",
           invalidPdf: "Invalid PDF file.",
-          pdfPageCount: "PDF does not meet the required page count."
+          pdfPageCount: "PDF does not meet the required page count.",
         },
         customValidations: {
           image: [
@@ -53,14 +52,14 @@ export default {
               return true;
             }
           ],
-          // pdf: [
-          //   (file, pdfData, pdfText) => {
-          //     if (!pdfText.includes('RequiredKeyword')) {
-          //       return "The PDF file does not contain the required keyword.";
-          //     }
-          //     return true;
-          //   }
-          // ]
+          pdf: [
+            (file, pdfData, pdfText) => {
+              if (!pdfText.includes('RequiredKeyword')) {
+                return "The PDF file does not contain the required keyword.";
+              }
+              return true;
+            }
+          ]
         }
       };
 
