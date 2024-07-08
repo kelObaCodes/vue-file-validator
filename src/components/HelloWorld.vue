@@ -34,7 +34,7 @@ export default {
         heightOfImage: 2000,
         widthOfImage: 2000  ,
         pdfPageMinCount: 3,
-        // pdfPageMaxCount: 1,
+        pdfPageMaxCount: 1,
         messages: {
           noFile: "3",
           fileSize: "File size exceeds the allowed limit.",

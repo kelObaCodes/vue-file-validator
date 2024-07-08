@@ -3,13 +3,13 @@
 vue-file-validator is a Vue.js plugin that provides a robust and customizable solution for validating files. It supports validation of various file types, including images and PDFs, with options for file size, type checks, dimensions, and custom validation functions.
 
 ## Table of Contents
-+ Installation
-+ Basic Usage
-+ Options
-+ Custom Validations
-+ Advanced Example
-+ License
 
+-   Installation
+-   Basic Usage
+-   Options
+-   Custom Validations
+-   Advanced Example
+-   License
 
 ## Installation
 
@@ -19,52 +19,47 @@ Install the plugin via npm or yarn:
 npm install vue-file-validator
 ```
 
-or 
+or
+
 ```sh
 yarn add vue-file-validator
 
 ```
 
 ## Basic Usage
+
 To use the **vue-file-validator** plugin, follow these steps:
 
 1. **Register the Plugin**
-In your Vue application, import and register the plugin:
-
-
+   In your Vue application, import and register the plugin:
 
 ```javascript
 // main.js or main.ts
-import { createApp } from 'vue'; // Vue 3
-import App from './App.vue';
-import vueFileValidator from 'vue-file-validator';
+import { createApp } from "vue"; // Vue 3
+import App from "./App.vue";
+import vueFileValidator from "vue-file-validator";
 
 const app = createApp(App);
 app.use(vueFileValidator);
-app.mount('#app');
+app.mount("#app");
 
 ```
-
 For Vue 2
-
 
 ```javascript
 // main.js
-import Vue from 'vue';
-import App from './App.vue';
-import vueFileValidator from 'vue-file-validator';
+import Vue from "vue";
+import App from "./App.vue";
+import vueFileValidator from "vue-file-validator";
 
 Vue.use(vueFileValidator);
 
 new Vue({
-  render: h => h(App),
-}).$mount('#app');
-
+    render: (h) => h(App),
+}).$mount("#app");
 ```
 
-
 2. **Use the Plugin in Your Component**
-
 
 ```javascript
 <template>
@@ -91,45 +86,64 @@ export default {
 </script>
 
 ```
-**Options**
+
+## Options
 
 You can customize the validation behavior using the following options:
 
 ```javascript
 const defaultOptions = {
-  showAlert: true, // Show alert messages for validation errors
-  sizeInKbAllowed: 10240, // Maximum allowed file size in KB (default: 10 MB)
-  allowedTypes: ['image/jpeg', 'image/png', 'application/pdf'], // Allowed MIME types
-  heightOfImage: 2000, // Maximum allowed height for images in pixels
-  widthOfImage: 2000, // Maximum allowed width for images in pixels
-  messages: {
-    noFile: "No file selected.", // Message when no file is selected
-    fileSize: "File size exceeds the allowed limit.", // Message for size validation
-    fileType: "Invalid file type.", // Message for type validation
-    dimensions: "Invalid image dimensions.", // Message for dimension validation
-    invalidPdf: "Invalid PDF file.", // Message for invalid PDF
-    pageCount: "PDF does not meet the required page count." // Message for PDF page count
-  },
-  customValidations: {
-    image: [], // Array of custom validation functions for images
-    pdf: []    // Array of custom validation functions for PDFs
-  }
+    showAlert: true, // Show alert messages for validation errors
+    sizeInKbAllowed: 10240, // Maximum allowed file size in KB (default: 10 MB)
+    allowedTypes: ["image/jpeg", "image/png", "application/pdf"], // Allowed MIME types
+    heightOfImage: 2000, // Maximum allowed height for images in pixels
+    widthOfImage: 2000, // Maximum allowed width for images in pixels
+    pdfPageMinCount: 3,
+    pdfPageMaxCount: 1,
+    messages: {
+        noFile: "No file selected.", // Message when no file is selected
+        fileSize: "File size exceeds the allowed limit.", // Message for size validation
+        fileType: "Invalid file type.", // Message for type validation
+        dimensions: "Invalid image dimensions.", // Message for dimension validation
+        invalidPdf: "Invalid PDF file.", // Message for invalid PDF
+        pageCount: "PDF does not meet the required page count.", // Message for PDF page count
+    },
+    customValidations: {
+        image: [
+            // Array of custom validation functions for images
+            (file, image) => {
+                if (file.name.includes("test")) {
+                    return "Image file name should not contain 'test'.";
+                }
+                return true;
+            },
+        ],
+        pdf: [
+            // Array of custom validation functions for PDFs
+            (file, pdfData, pdfText) => {
+                if (!pdfText.includes("RequiredKeyword")) {
+                    return "The PDF file does not contain the required keyword.";
+                }
+                return true;
+            },
+        ],
+    },
 };
 ```
 
 **Description of Options**
 
-+ showAlert (optional, default: true): Show alert messages for validation errors.
-+ sizeInKbAllowed (optional, default: 10240): Maximum allowed file size in kilobytes.
-+ allowedTypes (optional, default: ['image/jpeg', 'image/png', 'application/pdf']): Array of allowed MIME types.
-+ heightOfImage (optional, default: 2000): Maximum allowed height for images in pixels.
-+ widthOfImage (optional, default: 2000): Maximum allowed width for images in pixels.
-+ pdfPageMinCount (optional, default: 1): Minimum allowed pages for pdfs.
-+ pdfPageMaxCount (optional, default: 10): Maximum allowed pages for pdfs.
-+ messages (optional): Custom messages for validation errors.
-+ customValidations (optional): Object containing arrays of custom validation functions for images and PDFs.
+-   **showAlert (optional, default: true):** Show alert messages for validation errors.
+-   **sizeInKbAllowed* (required, default: 10240):** Maximum allowed file size in kilobytes.
+-   **allowedTypes* (required, default: ['image/jpeg', 'image/png', 'application/pdf']):** Array of allowed MIME types.
+-   **heightOfImage (optional, default: 2000):** Maximum allowed height for images in pixels.
+-   **widthOfImage (optional, default: 2000):** Maximum allowed width for images in pixels.
+-   **pdfPageMinCount (optional, default: 1):** Minimum allowed pages for pdfs.
+-   **pdfPageMaxCount (optional, default: 10):** Maximum allowed pages for pdfs.
+-   **messages (optional):** Custom messages for validation errors.
+-   **customValidations (optional):** Object containing arrays of custom validation functions for images and PDFs.
 
-**Custom Validations**
+## Custom Validations
 
 Custom validation functions allow you to define additional checks for files. Each function should return **true** if the validation passes, or a string message if it fails.
 
@@ -137,38 +151,37 @@ Custom validation functions allow you to define additional checks for files. Eac
 
 ```javascript
 const options = {
-  customValidations: {
-    image: [
-      (file, image) => {
-        if (file.name.includes('sample')) {
-          return "Image file name should not contain 'sample'.";
-        }
-        return true;
-      }
-    ]
-  }
+    customValidations: {
+        image: [
+            (file, image) => {
+                if (file.name.includes("sample")) {
+                    return "Image file name should not contain 'sample'.";
+                }
+                return true;
+            },
+        ],
+    },
 };
-
 ```
+
 **Custom Validation for PDFs**
 
 ```javascript
 const options = {
-  customValidations: {
-    pdf: [
-      (file, pdfData, pdfText) => {
-        if (!pdfText.includes('Important')) {
-          return "The PDF file must contain 'Important'.";
-        }
-        return true;
-      }
-    ]
-  }
+    customValidations: {
+        pdf: [
+            (file, pdfData, pdfText) => {
+                if (!pdfText.includes("Important")) {
+                    return "The PDF file must contain 'Important'.";
+                }
+                return true;
+            },
+        ],
+    },
 };
-
 ```
 
-**Advanced Example**
+## Advanced Example
 
 Here’s a more advanced example demonstrating how to use multiple options and custom validations:
 
@@ -227,5 +240,5 @@ export default {
 
 ```
 
-**License**
+## License*
 This project is licensed under the MIT License. See the LICENSE file for more details.
